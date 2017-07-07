@@ -1,0 +1,107 @@
+<!--  Dashboard implementation for Doctor account-->
+<!--  Welcomes the doctor and shows patients-->
+<!--  Author: Adolfo Moreno-->
+<html>
+
+<head>
+  <title>DocDoc Go Dashboard</title>
+  <!--  Load bootstrap and all other external files-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/smoothness/jquery-ui.css" media="all">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <!--  Header for our app-->
+  <div class="well">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="jumbotron text-center">
+          <h1> <span class="fa fa-lock"> </span>
+            DocDoc Go
+          </h1>
+        </div>
+      </div>
+
+      <!-- Nav. menu bar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">DocDoc Go</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <!-- End header with title and navbar -->
+
+  <!--  Welcome our Doctor User by name-->
+  <div class="well">
+    <div class="row">
+      <div class="col-sm-4">
+        <h3>Welcome back Dr. <%= user.name.last %>,</h3>
+      </div>
+    </div>
+  </div>
+
+  <!--  Allow user to search by last name-->
+  <div class="well">
+    <div class="row">
+      <div class="col-sm-4">
+        <div id="patient-list">
+          <h1>Patients</h1>
+          <form action="searchPatient" method="post">
+            <div class="form-group">
+              <label>Search Patients By Last Name</label>
+              <input type="text" class="form-control" name="lastName">
+            </div>
+            <button type="submit" data-toggle="modal" data-target="#myModal" class="btn btn-warning btn-lg"> Search</button>
+          </form>
+
+          <!--  List all patients in system by last, first name and dob-->
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient Last Name</th>
+                  <th>Patient First Name</th>
+                  <th> Patient DOB </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for (var i = 0; i < userList.length; i++) { %>
+                  <tr>
+                    <td>
+                      <a href='patient/<%= userList[i]._id %>'>
+                        <%= userList[i].name.last %>
+                      </a>
+                    </td>
+                    <td>
+                      <%= userList[i].name.first %>
+                    </td>
+                    <td>
+                      <%= userList[i].dob.birthdate %>
+                    </td>
+                  </tr>
+                  <% } %>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,372 @@
+<!--  Display patient infromation based on id passed-->
+<!--  Author: Adolfo Moreno-->
+
+<html>
+
+<head>
+  <title>DocDoc Go - Patient</title>
+  <!--  Load bootstrap, datetimepicker, and all other externals-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://www.malot.fr/bootstrap-datetimepicker/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/smoothness/jquery-ui.css" media="all">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.js"></script>
+  <script type="text/javascript" src="http://www.malot.fr/bootstrap-datetimepicker/js/google-code-prettify/prettify.js" charset="UTF-8"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+  <link href="http://www.malot.fr/bootstrap-datetimepicker/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet">
+  <script type="text/javascript" src="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/master/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+
+</head>
+
+<body>
+  <!--  Display App logo header-->
+  <div class="well">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="jumbotron text-center">
+          <h1> <span class="fa fa-lock"> </span>
+            DocDoc Go
+          </h1>
+        </div>
+      </div>
+
+      <!-- Nav. menu bar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">DocDoc Go</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="/profile">Home</a></li>
+            <li class="active"><a href="#">Patient</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!--  Display basic patient information-->
+  <div class="well">
+    <h1>Patient information</h1>
+    <h3><span class="fa fa-user"></span> <%= userID.name.first %> <%= userID.name.last %></h3>
+    <h5><span class="fa fa-id-card"></span> Patient ID: <%= userID._id%></h5>
+    <h5><span class="fa fa-birthday-cake"></span> DOB: <%= userID.dob.birthdate%></h5>
+    <h5><span class="fa fa-home"></span> Home Address: <%= userID.local.address%></h5>
+    <h5><span class="fa fa-mobile"></span> Phone Number: <%= userID.local.phone%></h5>
+    <h5><span class="fa fa-envelope-open"></span> Email Address: <%= userID.local.email%></h5>
+  </div>
+
+  <!--  Display Future appointments-->
+  <div class="well">
+    <div class="row">
+      <div class="col-sm-4">
+        <h1>Future Appointments</h1>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date & time</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (var i = 0; i < fDates.length; i++) { %>
+                <%if (fDates[i].appointment.status == 'Confirmed') { %>
+
+                  <tr>
+                    <td>
+                      <%= fDates[i].appointment.date %>
+                    </td>
+                    <td>
+                      <%= fDates[i].appointment.subj %>
+                    </td>
+                  </tr>
+                  <% } %>
+                    <% } %>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!--  Display Past Appointments-->
+      <div class="col-sm-4">
+        <h1>Past Appointments</h1>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date & time</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (var i = 0; i < pDates.length; i++) { %>
+                <%if (pDates[i].appointment.status == 'Confirmed') { %>
+
+                  <tr>
+                    <td>
+                      <%= pDates[i].appointment.date %>
+                    </td>
+                    <td>
+                      <%= pDates[i].appointment.subj %>
+                    </td>
+                  </tr>
+                  <% } %>
+                    <% } %>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!--  Display Pending appointments-->
+      <div class="col-sm-4">
+        <h1>Pending Appointments</h1>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date & time</th>
+                <th>Purpose</th>
+                <th>Accept</th>
+                <th>Deny</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (var i = 0; i < appList.length; i++) { %>
+                <%if (appList[i].appointment.status == 'Pending') { %>
+                  <tr>
+                    <td>
+                      <%= appList[i].appointment.date %>
+                    </td>
+                    <td>
+                      <%= appList[i].appointment.subj %>
+
+                    </td>
+                    <!--  Add listener-->
+                    <td><a id="acceptButton" name="<%= appList[i]._id %>" onclick=" myFunction('<%= appList[i]._id %>')" data-toggle="modal" data-target="#myModalAccept"> <span class="fa fa-check"> </a></td>
+                    <td><a id="denyButton" onclick=" myFunction('<%= appList[i]._id %>')" data-toggle="modal" data-target="#myModal" name="<%=appList[i]._id%>"><span class="fa fa-close"></a></td>
+                  </tr>
+                  <% } %>
+                    <% } %>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <center>
+      <!--  Form to create a new appointment-->
+      <div class="well">
+        <div class="row">
+          <div class="col-sm-12 ">
+            <h1>Create New Appointment</h1>
+            <form action="newAppoint" method="post">
+              <label>Date & Time</label>
+              <div class="form-group input-append date form_datetime">
+                <input size="16" type="text" value="" name="date" readonly>
+                <span class="add-on"><i class="icon-remove"></i></span>
+                <span class="add-on"><i class="icon-th"></i></span>
+              </div>
+
+              <label>Reason</label>
+              <textarea name="message" rows="10" cols="100">Reason for appointment</textarea>
+              <input type="hidden" class="form-control" name="patientID" value="<%=userID._id%>">
+
+              </br>
+              <button type="submit" class="btn btn-warning btn-lg"> Create Appointment</button>
+
+            </form>
+          </div>
+          <!--  Give action to the datetimepicker-->
+          <script type="text/javascript">
+            $(".form_datetime").datetimepicker({
+              format: 'yyyy-mm-dd hh:ii',
+              today: 'Go to today',
+              Default: true,
+              showMeridian: true,
+              autoclose: true,
+              todayBtn: true
+            });
+          </script>
+
+          <script type="text/javascript" src="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/master/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+        </div>
+      </div>
+  </div>
+  </center>
+
+  <center>
+    <!-- Display files and ability to add new files through form -->
+    <div class="well">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1><%= userID.name.first %>'s Files </h1>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for (var i = 0; i < myFiles.length; i++) { %>
+                  <tr>
+                    <td>
+                      <a href="./app/file/uploads/<%= myFiles[i].file.name %>">
+                        <%= myFiles[i].file.name %>
+                      </a>
+                    </td>
+                    <td><a id="delButton" name="<%= myFiles[i]._id %>" onclick=" myFunction('<%= myFiles[i]._id %>')" data-toggle="modal" data-target="#myModalDel"> <span class="fa fa-close"> </a></td>
+                  </tr>
+                  <% } %>
+
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <div class="row">
+              <div class="col-sm-12">
+                <h1>Upload New Files </h1>
+                </br>
+                <form method="post" action="uploadFile" enctype="multipart/form-data">
+                  <input type="file" name="myFile" />
+                  <input type="hidden" class="form-control" name="patientID" value="<%=userID._id%>">
+                  <button type="submit" class="btn btn-warning btn-lg"> Upload</button>
+                  <br/>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </center>
+
+  <!-- Modal For denying appointments-->
+  <div class="modal fade" id="myModal" role="dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Deny Appointment</h4>
+      </div>
+      <div class="modal-body">
+        <form action="denyAppt" method="post">
+          <label>Short Message</label>
+          <textarea name="message" rows="10" cols="100"></textarea>
+          <div id="idDIV" style="visibility:hidden">
+
+          </div>
+          <div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-default">Deny</button>
+      </div>
+
+      </form>
+    </div>
+  </div>
+  <!--  End Modal-->
+
+  <!--  Accept Modal-->
+  <!-- Modal -->
+  <div class="modal fade" id="myModalAccept" role="dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Accept Appointment</h4>
+      </div>
+      <div class="modal-body">
+        <form action="acceptAppt" method="post">
+          <label>Are you sure you want to accept this appointment?</label>
+          <div id="idDIV2" style="visibility:hidden">
+
+          </div>
+          <div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-default">Accept</button>
+
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+  <!--  End Modal-->
+
+  <!--  Delete File Modal-->
+  <!-- Modal -->
+  <div class="modal fade" id="myModalDel" role="dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete File</h4>
+      </div>
+      <div class="modal-body">
+        <form action="delFile" method="post">
+          <label>Are you sure you want to Delete this file?</label>
+          <div id="idDIV3" style="visibility:hidden">
+
+          </div>
+          <div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-default">Accept</button>
+
+      </div>
+      </form>
+    </div>
+  </div>
+  <!--  End Modal-->
+</body>
+
+<script>
+  // cancel appointment
+  function myFunction(val) {
+    var renHTML = "<input class=\"form-control\" name=\"apptID\" value= \"" + val + "\">"
+    document.getElementById("idDIV2").innerHTML = renHTML;
+  }
+
+  // cancel appointment
+  function myFunction2(val) {
+    var renHTML = "<input type=\"hidden\" class=\"form-control\" name=\"apptID\" value= \"" + val + "\">"
+    document.getElementById("idDIV").innerHTML = renHTML;
+  }
+
+  // delete files
+  function myFunction3(val) {
+    var renHTML = "<input type=\"hidden\" class=\"form-control\" name=\"apptID\" value= \"" + val + "\">"
+    document.getElementById("idDIV3").innerHTML = renHTML;
+  }
+</script>
+
+</html>
