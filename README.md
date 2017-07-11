@@ -18,6 +18,11 @@ In the dashboard doctors are immediately greated by the dashboard and shown a li
 
 On the profile side when a patient logs in they are immediately shown their infomation like what is displayed on the dashboard for doctors with the exception being that they can cancel future appointments and view denied appointments.
 
+Test Accounts:
+Please load the database from the .json files (users, appointments)
+Doctor: Email - t@test.com - Password - hi123
+Patient: Email - r@test.com - Password - hi123
+
 
 Planned future modifications:
 Ability to message,
